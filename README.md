@@ -34,7 +34,7 @@ The tool employs advanced heuristics to detect a wide range of anti-forensic tec
 ## Prerequisites
 
 *   **Python**: 3.8+
-*   **Node.js**: 18+
+*   **Node.js**: 22+ (or 20.19+)
 *   **npm**: 8+
 
 ## Installation & Usage
