@@ -1,0 +1,369 @@
+<div class="container-xl py-10 bg-gray-800 min-h-screen">
+  <div class="flex flex-col sm:flex-row items-center justify-between mb-6 gap-4">
+    <h1 class="text-3xl font-bold text-white">Anti-Forensics Detector</h1>
+    <div class="flex flex-wrap gap-2">
+      <button class="btn btn-secondary" (click)="testBackendConnection()" title="Test backend connection">
+        <svg viewBox="0 0 24 24" class="h-5 w-5" aria-hidden="true">
+          <path fill="currentColor"
+            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+        </svg>
+        Test Connection
+      </button>
+      <button class="btn btn-accent" (click)="createTestADS()" title="Create test ADS file">
+        <svg viewBox="0 0 24 24" class="h-5 w-5" aria-hidden="true">
+          <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+        </svg>
+        Create Test ADS
+      </button>
+      <button class="btn btn-primary" [disabled]="analysisResults.length === 0" (click)="generateReport()">
+        <svg viewBox="0 0 24 24" class="h-5 w-5" aria-hidden="true">
+          <path fill="currentColor"
+            d="M6 2h9a2 2 0 012 2v3h1a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2zm9 5V4H6v16h12V9h-3zm-7 8h8v2H8v-2zm0-4h8v2H8v-2z" />
+        </svg>
+        Generate Report
+      </button>
+      <button class="btn btn-warning" (click)="clearSelection()" title="Clear all selections">
+        <svg viewBox="0 0 24 24" class="h-5 w-5" aria-hidden="true">
+          <path fill="currentColor"
+            d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+        </svg>
+        Clear All
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Analysis Card -->
+  <div class="card p-6 mb-6">
+    <h2 class="text-xl font-semibold text-white mb-4">Analyze for Anti-Forensics Techniques</h2>
+
+    <!-- Scan Type Selection -->
+    <div class="mb-6">
+      <div class="block text-gray-300 text-sm font-semibold mb-2">Scan Type</div>
+      <div class="flex space-x-4">
+        <label class="inline-flex items-center cursor-pointer">
+          <input type="radio" name="scanType" [value]="'file'" [(ngModel)]="scanType"
+            (change)="onScanTypeChange('file')" class="form-radio h-4 w-4 text-indigo-600">
+          <span class="ml-2 text-gray-300">Single File</span>
+        </label>
+        <label class="inline-flex items-center cursor-pointer">
+          <input type="radio" name="scanType" [value]="'directory'" [(ngModel)]="scanType"
+            (change)="onScanTypeChange('directory')" class="form-radio h-4 w-4 text-indigo-600">
+          <span class="ml-2 text-gray-300">Directory</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- File Path / Upload Section -->
+    <div class="mb-6">
+      <label for="filePath" class="block text-gray-300 text-sm font-semibold mb-2">
+        {{ scanType === 'file' ? 'File Path' : 'Directory Path' }}
+      </label>
+      <div class="flex flex-col md:flex-row items-start md:items-center gap-2">
+        <input type="text" id="filePath" [(ngModel)]="analysisPath"
+          class="flex-grow bg-gray-900 border border-gray-700 rounded w-full py-2 px-3 text-gray-200 placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition"
+          [placeholder]="scanType === 'file' ? 'C:\\evidence\\file.png' : 'C:\\evidence\\case_folder'">
+        <div class="flex gap-2" *ngIf="scanType === 'file'">
+          <label for="fileUpload" class="btn btn-secondary cursor-pointer py-2 px-4" title="Upload a file for analysis">
+            <svg viewBox="0 0 24 24" class="h-5 w-5 mr-2" aria-hidden="true">
+              <path fill="currentColor"
+                d="M18 15v3H6v-3H4v3c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-3h-2zm-1-4l-1.41-1.41L13 11.17V4h-2v7.17L7.41 9.59L6 11l6 6l6-6z" />
+            </svg>
+            <span>Upload File</span>
+            <input type="file" id="fileUpload" class="hidden" (change)="onFileSelected($event)">
+          </label>
+        </div>
+        <div class="flex gap-2" *ngIf="scanType === 'directory'">
+          <!-- Directory stats button removed as integrated into main analysis -->
+        </div>
+      </div>
+      <div *ngIf="selectedFile" class="mt-2 text-sm text-green-400">
+        📄 Selected file: {{ selectedFile.name }} ({{ formatSize(selectedFile.size || 0) }})
+      </div>
+      <div class="mt-2 text-xs text-gray-500">
+        Enter the absolute path to the {{ scanType }} on the server.
+      </div>
+      <div *ngIf="selectedFile && isADSSelected()"
+        class="mt-3 p-2 bg-yellow-900/30 border border-yellow-700/50 rounded text-xs text-yellow-200">
+        ⚠️ <strong>Note:</strong> Browser file upload does not preserve Alternate Data Streams (ADS) or Extended
+        Attributes.
+        To test ADS detection, please use the "File Path" option with a file that already exists on the server.
+      </div>
+    </div>
+
+    <!-- Detector Selection Section -->
+    <div class="mb-6">
+      <div class="flex items-center justify-between mb-2">
+        <div class="block text-gray-300 text-sm font-semibold">Detection Options</div>
+        <div class="flex items-center">
+          <input type="checkbox" id="selectAllDetectors" [checked]="isAllSelected()"
+            (change)="selectAllDetectors($event)" class="form-checkbox h-4 w-4 text-indigo-600">
+          <label for="selectAllDetectors" class="ml-2 text-sm text-gray-300">Select All</label>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div *ngFor="let detector of availableDetectors"
+          class="p-3 border border-gray-700 rounded-lg hover:border-indigo-500 transition"
+          [class.bg-indigo-900/20]="detector.value === 'ads_detection'">
+          <div class="flex items-center">
+            <input type="checkbox" id="{{ detector.value }}" [value]="detector.value"
+              (change)="onDetectorChange(detector.value, $event)" [checked]="selectedDetectors.includes(detector.value)"
+              class="form-checkbox h-4 w-4 text-indigo-600">
+            <label for="{{ detector.value }}" class="ml-2 text-gray-300 font-medium">
+              {{ detector.name }}
+            </label>
+          </div>
+          <!-- ADS Methods Sub-selection -->
+          <div *ngIf="detector.value === 'ads_detection' && isADSSelected()"
+            class="ml-6 mt-3 p-3 bg-gray-900/50 rounded border border-gray-700">
+            <div class="flex items-center justify-between mb-2">
+              <div class="text-xs font-semibold text-gray-400">ADS Detection Methods</div>
+              <div class="flex items-center">
+                <input type="checkbox" id="selectAllADSMethods" [checked]="isAllADSMethodsSelected()"
+                  (change)="selectAllADSMethods($event)" class="form-checkbox h-3 w-3 text-blue-500">
+                <label for="selectAllADSMethods" class="ml-1 text-xs text-gray-400">All</label>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <div *ngFor="let method of detector.subOptions || []" class="flex items-center">
+                <input type="checkbox" [id]="'ads-method-' + method.value" [value]="method.value"
+                  [checked]="selectedADSMethods.includes(method.value)"
+                  (change)="onADSMethodChange(method.value, $event)" class="form-checkbox h-3 w-3 text-blue-500">
+                <label [for]="'ads-method-' + method.value" class="ml-2 text-xs text-gray-300">
+                  {{ method.name }}
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Run Analysis Button -->
+    <div class="flex justify-center">
+      <button (click)="runAnalysis()" [disabled]="isLoading || (!analysisPath.trim() && !selectedFile)"
+        class="btn btn-primary text-lg px-8 py-3" [class.opacity-50]="isLoading">
+        <svg *ngIf="isLoading" class="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" />
+          <path class="opacity-75" fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+        </svg>
+        <svg *ngIf="!isLoading" viewBox="0 0 24 24" class="h-6 w-6 mr-2" aria-hidden="true">
+          <path fill="currentColor" d="M12 2l9 4v6c0 5-9 10-9 10S3 17 3 12V6l9-4z" />
+        </svg>
+        <span>{{ isLoading ? 'Analyzing...' : 'Run Analysis' }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Error Section -->
+  <div *ngIf="errorMessage" class="card p-4 mb-6 bg-red-900/20 border border-red-700/50">
+    <div class="flex items-center">
+      <svg viewBox="0 0 24 24" class="h-6 w-6 text-red-400 mr-2">
+        <path fill="currentColor"
+          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+      </svg>
+      <div class="text-lg font-semibold text-white">{{ errorMessage }}</div>
+    </div>
+  </div>
+
+  <!-- Summary Section -->
+  <div *ngIf="summary" class="card p-4 mb-6">
+    <div class="flex items-center">
+      <svg viewBox="0 0 24 24" class="h-6 w-6 text-green-400 mr-2">
+        <path fill="currentColor"
+          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+      </svg>
+      <div class="text-lg font-semibold text-white">{{ summary }}</div>
+    </div>
+  </div>
+
+  <!-- Risk Assessment Section -->
+  <div *ngIf="riskAssessment" class="card p-6 mb-6">
+    <h2 class="text-xl font-semibold text-white mb-4">Risk Assessment</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div class="bg-gray-900 p-4 rounded-lg">
+        <div class="text-sm text-gray-400">Risk Level</div>
+        <div class="text-2xl font-bold mt-1" [class.text-red-400]="riskAssessment.risk_level === 'critical'"
+          [class.text-orange-400]="riskAssessment.risk_level === 'high'"
+          [class.text-yellow-400]="riskAssessment.risk_level === 'medium'"
+          [class.text-green-400]="riskAssessment.risk_level === 'low'">
+          {{ riskAssessment.risk_level.toUpperCase() || 'N/A' }}
+        </div>
+      </div>
+      <div class="bg-gray-900 p-4 rounded-lg">
+        <div class="text-sm text-gray-400">Risk Score</div>
+        <div class="text-2xl font-bold mt-1 text-white">{{ riskAssessment.score || 0 }}/100</div>
+      </div>
+      <div class="bg-gray-900 p-4 rounded-lg">
+        <div class="text-sm text-gray-400">Total Streams</div>
+        <div class="text-2xl font-bold mt-1 text-white">{{ riskAssessment.details?.total_streams || 0 }}</div>
+      </div>
+      <div class="bg-gray-900 p-4 rounded-lg">
+        <div class="text-sm text-gray-400">Total Size</div>
+        <div class="text-2xl font-bold mt-1 text-white">{{ riskAssessment.details?.total_size_human || '0 B' }}</div>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <div class="text-sm text-gray-400 mb-1">Description</div>
+      <div class="text-white">{{ riskAssessment.description || 'No description available' }}</div>
+    </div>
+
+    <div *ngIf="riskAssessment.details as details" class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div class="text-center p-3 bg-gray-900/50 rounded">
+        <div class="text-2xl font-bold text-red-400">{{ details.critical_streams || 0 }}</div>
+        <div class="text-xs text-gray-400">Critical</div>
+      </div>
+      <div class="text-center p-3 bg-gray-900/50 rounded">
+        <div class="text-2xl font-bold text-orange-400">{{ details.high_risk_streams || 0 }}</div>
+        <div class="text-xs text-gray-400">High Risk</div>
+      </div>
+      <div class="text-center p-3 bg-gray-900/50 rounded">
+        <div class="text-2xl font-bold text-yellow-400">{{ details.medium_risk_streams || 0 }}</div>
+        <div class="text-xs text-gray-400">Medium Risk</div>
+      </div>
+      <div class="text-center p-3 bg-gray-900/50 rounded">
+        <div class="text-2xl font-bold text-green-400">{{ details.low_risk_streams || 0 }}</div>
+        <div class="text-xs text-gray-400">Low Risk</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recommendations Section -->
+  <div *ngIf="recommendations.length > 0" class="card p-6 mb-6">
+    <h2 class="text-xl font-semibold text-white mb-4">Recommendations</h2>
+    <div class="space-y-3">
+      <div *ngFor="let rec of recommendations; let i = index" class="flex items-start p-3 rounded-lg"
+        [class.bg-red-900/20]="rec.includes('IMMEDIATE')"
+        [class.bg-yellow-900/20]="rec.includes('WARNING') || rec.includes('⚠️')"
+        [class.bg-blue-900/20]="!rec.includes('IMMEDIATE') && !rec.includes('WARNING') && !rec.includes('⚠️')">
+        <svg viewBox="0 0 24 24" class="h-5 w-5 mt-0.5 mr-3 flex-shrink-0"
+          [class.text-red-400]="rec.includes('IMMEDIATE')"
+          [class.text-yellow-400]="rec.includes('WARNING') || rec.includes('⚠️')"
+          [class.text-blue-400]="!rec.includes('IMMEDIATE') && !rec.includes('WARNING') && !rec.includes('⚠️')">
+          <path fill="currentColor"
+            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+        </svg>
+        <span class="text-gray-200">{{ rec }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Analysis Results Section -->
+  <div *ngIf="analysisResults.length > 0" class="card p-6">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-xl font-semibold text-white">Analysis Results ({{ analysisResults.length }})</h2>
+      <div class="text-sm text-gray-400">
+        Showing {{ analysisResults.length }} total finding{{ analysisResults.length !== 1 ? 's' : '' }}
+      </div>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-700">
+        <thead>
+          <tr>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Indicator</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Type</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Size</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Risk</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Content Preview
+            </th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-800">
+          <tr *ngFor="let result of analysisResults; let i = index" class="hover:bg-gray-900/50 transition">
+            <td class="px-4 py-3 whitespace-nowrap">
+              <div class="text-sm font-medium text-white">{{ result.indicator }}</div>
+              <div class="text-xs text-gray-400">Finding {{ i + 1 }}</div>
+            </td>
+            <td class="px-4 py-3">
+              <span class="px-2 py-1 text-xs rounded-full bg-gray-800 text-gray-300">
+                {{ result.description.split('|')[0]?.trim() || 'Unknown' }}
+              </span>
+            </td>
+            <td class="px-4 py-3 text-sm text-gray-300">
+              {{ result.description.split('|')[1] ? result.description.split('|')[1].replace('Size:', '').trim() : 'N/A'
+              }}
+            </td>
+            <td class="px-4 py-3">
+              <div class="flex items-center">
+                <span class="badge mr-2" [class.bg-red-500/20]="result.severity === 'Critical'"
+                  [class.text-red-300]="result.severity === 'Critical'"
+                  [class.border-red-500/30]="result.severity === 'Critical'"
+                  [class.bg-orange-500/20]="result.severity === 'High'"
+                  [class.text-orange-300]="result.severity === 'High'"
+                  [class.border-orange-500/30]="result.severity === 'High'"
+                  [class.bg-yellow-500/20]="result.severity === 'Medium'"
+                  [class.text-yellow-300]="result.severity === 'Medium'"
+                  [class.border-yellow-500/30]="result.severity === 'Medium'"
+                  [class.bg-green-500/20]="result.severity === 'Low'" [class.text-green-300]="result.severity === 'Low'"
+                  [class.border-green-500/30]="result.severity === 'Low'">
+                  {{ result.severity }}
+                </span>
+                <span class="text-xs text-gray-400">{{ result.confidence }}%</span>
+              </div>
+              <div class="mt-1 h-1.5 w-24 rounded-full bg-gray-800">
+                <div class="h-1.5 rounded-full" [class.bg-red-500]="result.severity === 'Critical'"
+                  [class.bg-orange-500]="result.severity === 'High'"
+                  [class.bg-yellow-500]="result.severity === 'Medium'" [class.bg-green-500]="result.severity === 'Low'"
+                  [style.width.%]="result.confidence"></div>
+              </div>
+            </td>
+            <td class="px-4 py-3">
+              <div *ngIf="result.content_preview" class="max-w-xs">
+                <div class="text-xs text-gray-300 truncate" [title]="result.content_preview">
+                  {{ result.content_preview }}
+                </div>
+              </div>
+              <div *ngIf="!result.content_preview" class="text-xs text-gray-500 italic">
+                No preview
+              </div>
+            </td>
+            <td class="px-4 py-3">
+              <button class="text-xs text-indigo-400 hover:text-indigo-300" (click)="showDetails(result)">
+                View Details
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Stats Footer -->
+    <div *ngIf="riskAssessment?.details as details" class="mt-6 pt-4 border-t border-gray-800">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="text-center">
+          <div class="text-2xl font-bold text-white">{{ details.executable_streams || 0 }}</div>
+          <div class="text-xs text-gray-400">Executable Streams</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl font-bold text-white">{{ details.encrypted_streams || 0 }}</div>
+          <div class="text-xs text-gray-400">Encrypted Streams</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl font-bold text-white">{{ details.total_streams || 0 }}</div>
+          <div class="text-xs text-gray-400">Total Streams</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl font-bold text-white">{{ details.total_size_human || '0 B' }}</div>
+          <div class="text-xs text-gray-400">Total Size</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div *ngIf="isLoading" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+    <div class="bg-gray-900 p-8 rounded-xl shadow-2xl max-w-md w-full mx-4">
+      <div class="text-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-4"></div>
+        <h3 class="text-xl font-semibold text-white mb-2">Analyzing...</h3>
+        <p class="text-gray-400">
+          {{ isScanningDirectory ? 'Scanning directory for ADS' : 'Detecting Alternate Data Streams' }}
+        </p>
+        <p class="text-sm text-gray-500 mt-2">This may take a moment</p>
+      </div>
+    </div>
+  </div>
+</div>

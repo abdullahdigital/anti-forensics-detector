@@ -1,0 +1,72 @@
+<div class="container-xl py-10">
+  <h1 class="text-3xl font-bold text-white mb-6">Evidence Analyzer</h1>
+
+  <div class="card p-6 mb-6">
+    <h2 class="text-xl font-semibold text-white mb-4">Upload Evidence</h2>
+    <div class="border-2 border-dashed border-gray-600 rounded-lg p-6 text-center mb-4">
+      <input type="file" (change)="onFileSelected($event)" multiple class="hidden" #fileInput>
+      <button (click)="fileInput.click()" class="btn btn-primary">
+        <svg viewBox="0 0 24 24" class="h-5 w-5" aria-hidden="true"><path fill="currentColor" d="M5 20h14v-2H5v2zM12 2l5 5h-4v6H11V7H7l5-5z"/></svg>
+        Select Files
+      </button>
+      <p class="mt-3 text-gray-400">or drag and drop files here</p>
+    </div>
+
+    <div *ngIf="selectedFiles.length > 0" class="mb-4">
+      <h3 class="text-lg font-semibold text-white mb-2">Selected Files</h3>
+      <ul class="list-disc list-inside ml-4 text-gray-300">
+        <li *ngFor="let file of selectedFiles">{{ file.name }} ({{ file.size | fileSize }})</li>
+      </ul>
+    </div>
+
+    <button (click)="uploadFiles()" [disabled]="selectedFiles.length === 0" class="btn btn-secondary disabled:opacity-50">
+      <svg viewBox="0 0 24 24" class="h-5 w-5" aria-hidden="true"><path fill="currentColor" d="M5 20h14v-2H5v2zM12 2l5 5h-4v6H11V7H7l5-5z"/></svg>
+      Upload & Analyze
+    </button>
+  </div>
+
+  <div *ngIf="metadata.length > 0" class="card p-6">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-xl font-semibold text-white">Extracted Metadata</h2>
+      <button class="btn btn-primary" disabled>
+        <svg viewBox="0 0 24 24" class="h-5 w-5" aria-hidden="true"><path fill="currentColor" d="M6 2h9a2 2 0 012 2v3h1a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2zm9 5V4H6v16h12V9h-3zm-7 8h8v2H8v-2zm0-4h8v2H8v-2z"/></svg>
+        Generate Report
+      </button>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full">
+        <thead>
+          <tr class="text-gray-400 text-xs uppercase">
+            <th class="px-6 py-3 text-left">File Name</th>
+            <th class="px-6 py-3 text-left">File Type</th>
+            <th class="px-6 py-3 text-left">Size</th>
+            <th class="px-6 py-3 text-left">Last Modified</th>
+            <th class="px-6 py-3 text-left">Hash</th>
+            <th class="px-6 py-3 text-left">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of metadata" class="border-t border-gray-700">
+            <td class="px-6 py-4 text-sm text-white">{{ item.fileName }}</td>
+            <td class="px-6 py-4 text-sm text-gray-300">{{ item.fileType }}</td>
+            <td class="px-6 py-4 text-sm text-gray-300">{{ item.size | fileSize }}</td>
+            <td class="px-6 py-4 text-sm text-gray-300">{{ item.lastModified | date:'short' }}</td>
+            <td class="px-6 py-4 text-sm text-gray-300">{{ item.hash }}</td>
+            <td class="px-6 py-4 text-sm">
+              <button (click)="viewDetails(item)" class="text-indigo-400 hover:text-indigo-300 mr-4">View</button>
+              <button (click)="deleteMetadata(item)" class="text-red-400 hover:text-red-300">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="aiSummary" class="mt-6 glass p-4">
+      <div class="flex items-center gap-2 text-indigo-300">
+        <svg viewBox="0 0 24 24" class="h-5 w-5" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 5v6l5 3-.75 1.3L12 13V7h1z"/></svg>
+        <span class="text-sm font-semibold">Quick AI Summary</span>
+      </div>
+      <p class="mt-2 text-sm text-gray-300">{{ aiSummary }}</p>
+    </div>
+  </div>
+</div>

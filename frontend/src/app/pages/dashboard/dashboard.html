@@ -1,0 +1,87 @@
+<div class="p-6 bg-gray-100 min-h-screen">
+  <h1 class="text-3xl font-bold text-gray-800 mb-6">Dashboard</h1>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+    <!-- Card 1: Total Cases -->
+    <div class="bg-white rounded-lg shadow-md p-6 flex items-center justify-between">
+      <div>
+        <p class="text-gray-500 text-sm">Total Cases</p>
+        <h2 class="text-3xl font-bold text-gray-900">1,234</h2>
+      </div>
+      <div class="text-indigo-500 text-4xl">
+        <i class="fas fa-folder"></i>
+      </div>
+    </div>
+
+    <!-- Card 2: Pending Investigations -->
+    <div class="bg-white rounded-lg shadow-md p-6 flex items-center justify-between">
+      <div>
+        <p class="text-gray-500 text-sm">Pending Investigations</p>
+        <h2 class="text-3xl font-bold text-gray-900">156</h2>
+      </div>
+      <div class="text-yellow-500 text-4xl">
+        <i class="fas fa-hourglass-half"></i>
+      </div>
+    </div>
+
+    <!-- Card 3: Completed Reports -->
+    <div class="bg-white rounded-lg shadow-md p-6 flex items-center justify-between">
+      <div>
+        <p class="text-gray-500 text-sm">Completed Reports</p>
+        <h2 class="text-3xl font-bold text-gray-900">987</h2>
+      </div>
+      <div class="text-green-500 text-4xl">
+        <i class="fas fa-check-circle"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Recent Activity -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">Recent Activity</h2>
+      <ul class="divide-y divide-gray-200">
+        <li class="py-3 flex justify-between items-center">
+          <div>
+            <p class="text-gray-700">Case #2023-001 updated</p>
+            <p class="text-gray-500 text-sm">Evidence added by John Doe</p>
+          </div>
+          <span class="text-gray-400 text-sm">2 hours ago</span>
+        </li>
+        <li class="py-3 flex justify-between items-center">
+          <div>
+            <p class="text-gray-700">New report generated for Case #2023-005</p>
+            <p class="text-gray-500 text-sm">By Jane Smith</p>
+          </div>
+          <span class="text-gray-400 text-sm">Yesterday</span>
+        </li>
+        <li class="py-3 flex justify-between items-center">
+          <div>
+            <p class="text-gray-700">File system visualized for Case #2023-003</p>
+            <p class="text-gray-500 text-sm">Analysis complete</p>
+          </div>
+          <span class="text-gray-400 text-sm">3 days ago</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">Quick Actions</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <a routerLink="/evidence-upload" class="flex items-center justify-center px-4 py-3 bg-indigo-600 text-white rounded-lg shadow-md hover:bg-indigo-700 transition duration-300 ease-in-out">
+          <i class="fas fa-upload mr-2"></i> Upload Evidence
+        </a>
+        <a routerLink="/report-generator" class="flex items-center justify-center px-4 py-3 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition duration-300 ease-in-out">
+          <i class="fas fa-file-alt mr-2"></i> Generate Report
+        </a>
+        <a routerLink="/filesystem-visualizer" class="flex items-center justify-center px-4 py-3 bg-purple-600 text-white rounded-lg shadow-md hover:bg-purple-700 transition duration-300 ease-in-out">
+          <i class="fas fa-tree mr-2"></i> File System Visualizer
+        </a>
+        <a routerLink="/anti-forensics-detector" class="flex items-center justify-center px-4 py-3 bg-red-600 text-white rounded-lg shadow-md hover:bg-red-700 transition duration-300 ease-in-out">
+          <i class="fas fa-shield-alt mr-2"></i> Anti-Forensics Detector
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

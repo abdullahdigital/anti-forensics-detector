@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build-and-test-backend:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        cache: 'pip'
+    - name: Install dependencies
+      run: |
+        cd backend/python
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Run Backend Tests
+      run: |
+        # Replace with your actual test command
+        echo "Running backend tests..."
+        # e.g., pytest backend/python/tests/
+
+  build-and-test-frontend:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: 'frontend/package-lock.json'
+    - name: Install dependencies
+      run: |
+        cd frontend
+        npm ci
+    - name: Build Frontend
+      run: |
+        cd frontend
+        npm run build --if-present
+
+  docker-build:
+    runs-on: ubuntu-latest
+    needs: [build-and-test-backend, build-and-test-frontend]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+    - name: Build Backend Image
+      uses: docker/build-push-action@v4
+      with:
+        context: ./backend/python
+        file: ./backend/python/Dockerfile
+        push: false
+        tags: anti-forensics-backend:latest
+    - name: Build Frontend Image
+      uses: docker/build-push-action@v4
+      with:
+        context: ./frontend
+        file: ./frontend/Dockerfile
+        push: false
+        tags: anti-forensics-frontend:latest

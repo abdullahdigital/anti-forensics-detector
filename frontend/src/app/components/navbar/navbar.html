@@ -1,0 +1,23 @@
+<nav class="gradient-hero border-b border-gray-700/40">
+  <div class="container-xl flex items-center justify-between py-4">
+    <a routerLink="/home" class="flex items-center gap-2 text-white">
+      <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-white/10">
+        <svg viewBox="0 0 24 24" class="h-5 w-5 text-indigo-300" aria-hidden="true"><path d="M12 2l9 5v10l-9 5-9-5V7l9-5z" fill="currentColor"/></svg>
+      </span>
+      <span class="text-xl font-bold">ForenX</span>
+    </a>
+    <div class="hidden md:flex items-center gap-6 text-gray-300">
+      <a routerLink="/dashboard" class="hover:text-white transition">Dashboard</a>
+      <a routerLink="/evidence-upload" class="hover:text-white transition">Evidence Analyzer</a>
+      <a routerLink="/filesystem-visualizer" class="hover:text-white transition">Visualizer</a>
+      <a routerLink="/anti-forensics-detector" class="hover:text-white transition">Detector</a>
+    </div>
+    <div class="flex items-center gap-3">
+      <a routerLink="/evidence-upload" class="btn btn-outline">Start Analysis</a>
+      <button class="btn btn-primary" disabled>
+        <svg viewBox="0 0 24 24" class="h-5 w-5" aria-hidden="true"><path fill="currentColor" d="M6 2h9a2 2 0 012 2v3h1a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2zm9 5V4H6v16h12V9h-3zm-7 8h8v2H8v-2zm0-4h8v2H8v-2z"/></svg>
+        Generate Report
+      </button>
+    </div>
+  </div>
+</nav>

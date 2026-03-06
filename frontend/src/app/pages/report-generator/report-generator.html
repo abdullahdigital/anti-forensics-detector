@@ -1,0 +1,37 @@
+<div class="p-6 bg-gray-100 min-h-screen">
+  <h1 class="text-3xl font-bold text-gray-800 mb-6">Report Generator</h1>
+
+  <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">Generate New Report</h2>
+    <div class="mb-4">
+      <label for="reportType" class="block text-gray-700 text-sm font-bold mb-2">Report Type:</label>
+      <select id="reportType" [(ngModel)]="selectedReportType" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        <option value="summary">Summary Report</option>
+        <option value="detailed">Detailed Report</option>
+        <option value="custom">Custom Report</option>
+      </select>
+    </div>
+    <div class="mb-4">
+      <label for="caseId" class="block text-gray-700 text-sm font-bold mb-2">Case ID (Optional):</label>
+      <input type="text" id="caseId" [(ngModel)]="caseId" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="e.g., 2023-001">
+    </div>
+    <button (click)="generateReport()" class="px-6 py-3 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition duration-300 ease-in-out">
+      <i class="fas fa-file-export mr-2"></i> Generate Report
+    </button>
+  </div>
+
+  <div *ngIf="reportContent" class="bg-white rounded-lg shadow-md p-6">
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">Report Preview</h2>
+    <div class="border border-gray-300 rounded-lg p-4 bg-gray-50 min-h-[300px] overflow-auto">
+      <pre class="whitespace-pre-wrap font-mono text-sm text-gray-800">{{ reportContent }}</pre>
+    </div>
+    <div class="mt-4 flex space-x-4">
+      <button class="px-6 py-3 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition duration-300 ease-in-out">
+        <i class="fas fa-download mr-2"></i> Download Report
+      </button>
+      <button class="px-6 py-3 bg-indigo-600 text-white rounded-lg shadow-md hover:bg-indigo-700 transition duration-300 ease-in-out">
+        <i class="fas fa-print mr-2"></i> Print Report
+      </button>
+    </div>
+  </div>
+</div>

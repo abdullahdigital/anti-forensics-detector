@@ -1,0 +1,10 @@
+flask
+flask-cors
+asgiref
+python-dotenv
+numpy
+Pillow
+scipy
+scikit-learn
+pandas
+# pywin32 is NOT supported on Linux

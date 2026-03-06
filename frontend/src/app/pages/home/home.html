@@ -1,0 +1,36 @@
+<section class="gradient-hero">
+  <div class="container-xl py-24">
+    <div class="max-w-3xl mx-auto text-center animate-fade-in">
+      <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight text-white">ForenX</h1>
+      <p class="mt-4 text-lg md:text-xl text-gray-300">Digital forensics suite for evidence analysis, filesystem visualization, and anti-forensics detection.</p>
+      <div class="mt-8 flex flex-wrap justify-center gap-4">
+        <a routerLink="/evidence-upload" class="btn btn-primary">Start Analysis</a>
+        <a routerLink="/dashboard" class="btn btn-outline">Explore Dashboard</a>
+        <button class="btn btn-primary" disabled>Generate Report</button>
+      </div>
+    </div>
+    <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
+      <a routerLink="/evidence-upload" class="card p-6 hover:lift">
+        <div class="flex items-center gap-3 text-white">
+          <svg viewBox="0 0 24 24" class="h-6 w-6 text-indigo-300" aria-hidden="true"><path fill="currentColor" d="M5 20h14v-2H5v2zM5 4h14v6H5V4zm0 8h14v2H5v-2z"/></svg>
+          <h3 class="text-lg font-semibold">Evidence Analyzer</h3>
+        </div>
+        <p class="mt-3 text-sm text-gray-300">Upload files, extract metadata and hashes, and get a quick AI summary.</p>
+      </a>
+      <a routerLink="/filesystem-visualizer" class="card p-6 hover:lift">
+        <div class="flex items-center gap-3 text-white">
+          <svg viewBox="0 0 24 24" class="h-6 w-6 text-indigo-300" aria-hidden="true"><path fill="currentColor" d="M4 4h6v6H4V4zm10 0h6v6h-6V4zM4 14h6v6H4v-6zm10 0h6v6h-6v-6z"/></svg>
+          <h3 class="text-lg font-semibold">File System Visualizer</h3>
+        </div>
+        <p class="mt-3 text-sm text-gray-300">Interactive tree and graph views with metadata and hex inspection.</p>
+      </a>
+      <a routerLink="/anti-forensics-detector" class="card p-6 hover:lift">
+        <div class="flex items-center gap-3 text-white">
+          <svg viewBox="0 0 24 24" class="h-6 w-6 text-indigo-300" aria-hidden="true"><path fill="currentColor" d="M12 2l9 4v6c0 5-9 10-9 10S3 17 3 12V6l9-4zm0 4l-7 3v3c0 3.61 5.07 7.23 7 8.39 1.93-1.16 7-4.78 7-8.39V9l-7-3z"/></svg>
+          <h3 class="text-lg font-semibold">Anti-Forensics Detector</h3>
+        </div>
+        <p class="mt-3 text-sm text-gray-300">Detect timestomping, steganography, fake timestamps, and other anomalies.</p>
+      </a>
+    </div>
+  </div>
+</section>

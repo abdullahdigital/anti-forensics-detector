@@ -1,0 +1,18 @@
+{
+    "exact_matches": [
+        "desktop.ini",
+        "Thumbs.db",
+        ".DS_Store",
+        "pagefile.sys",
+        "hiberfil.sys",
+        "swapfile.sys",
+        "DumpStack.log.tmp"
+    ],
+    "extensions": [
+        ".tmp"
+    ],
+    "directories": [
+        "System Volume Information",
+        "$RECYCLE.BIN"
+    ]
+}
