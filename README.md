@@ -1,4 +1,4 @@
-# Anti-Forensics Linux
+# Anti-Forensics Detector
 
 A comprehensive anti-forensics tool designed to detect and analyze suspicious file activities and anomalies in Linux environments. This tool combines a Python Flask backend for file system analysis with a modern Angular frontend.
 
