@@ -1,41 +1,38 @@
-# Anti-Forensics Linux
+# Advanced Anti-Forensics Detector (AI-Powered)
 
-A comprehensive anti-forensics tool designed to detect and analyze suspicious file activities and anomalies in Linux environments. This tool combines a Python Flask backend for file system analysis with a modern Angular frontend.
+🚀 A full-stack digital forensics and threat hunting framework powered by a 12-module hybrid detection engine (7 predictive AI models, 5 fast heuristics). Designed to catch what traditional antivirus misses.
 
 ## Key Features
 
-The tool employs advanced heuristics to detect a wide range of anti-forensic techniques:
+The tool employs a powerful hybrid engine containing **12 distinct detection modules** to expose a wide range of anti-forensic techniques:
 
-*   **🕵️ Suspicious Rename Detector**
-    *   Identifies files renamed with random characters using Shannon Entropy analysis.
-*   **🎭 Masquerade Detection**
-    *   Detects file type spoofing by comparing file extensions against magic bytes references (e.g., an EXE renamed as JPG).
-*   **🔒 Encryption Detection**
-    *   Flags potential encrypted files using high-entropy checks and header analysis, identifying suspicious unknown formats.
-*   **📝 Metadata Manipulation Detection**
-    *   Cross-references file metadata with actual properties to uncover deep-fake timestamps and attributes.
-*   **👁️ Steganography Detection**
-    *   Analyzes files for appended data anomalies that suggest hidden payloads in images or binaries.
-*   **🕒 Timestomping Detection**
-    *   Examines timestamp nanosecond precision to detect artificial modification tools.
-*   **📂 Hidden Artifacts (ADS/Xattr)**
-    *   Scans for Alternate Data Streams (Windows) or suspicious Extended Attributes (Linux) used to hide data.
-*   **🧹 Data Wiping & Log Tampering**
-    *   Detects evidence of cleanup tools through byte histogram analysis and null-byte injection patterns.
-*   **👻 Hidden File Detection**
-    *   Identifies hidden files (dotfiles) and files with no extensions that may mask malicious content.
+### ⚡ Fast Heuristic Modules (5)
+* **🎭 Masquerade Detection:** Detects file type spoofing by cross-referencing file extensions against raw magic byte signatures (e.g., an EXE renamed as a JPG).
+* **🔒 Encryption Detection:** Flags potential encrypted files using Shannon Entropy calculations and header analysis.
+* **📂 Hidden Artifacts (ADS/Xattr):** Scans for Alternate Data Streams (Windows) or suspicious Extended Attributes (Linux) used to hide malicious data.
+* **👻 Hidden File Detection:** Identifies hidden files (dotfiles) and files with no extensions that mask malicious content.
+* **⏱️ Timestamp Logic Checks:** Examines timestamp nanosecond precision to detect artificial modification tools.
+
+### 🧠 AI-Powered Deep Inspection (7)
+* **🕵️ Suspicious Rename Analyzer:** Uses AI to identify files renamed with random characters or evasive patterns.
+* **📝 Fake Metadata Detector:** Employs AI to analyze textual representations of file metadata to uncover inconsistencies and deep-fake attributes.
+* **👁️ Steganography Analyzer:** Uses AI text and behavioral analysis to detect hidden payloads appended to images or binaries.
+* **🧹 Data Wiping Interpreter:** Uses AI to interpret byte histograms and null-byte injection patterns to find evidence of secure cleanup tools.
+* **📜 Log Tampering Detector:** Analyzes log snippets contextually via AI to find subtle traces of manipulation.
+* **⏳ Predictive Metadata Timeline:** Utilizes a predictive AI model to dynamically score long-term timestamp anomalies.
+* **🎯 Dynamic Anomaly Scorer:** An AI aggregation engine that combines findings from all 11 other modules to generate a definitive threat score and plain-English explanation.
 
 ## Technology Stack
 
-*   **Backend**: Python (Flask)
-*   **Frontend**: Angular v20 + TailwindCSS
-*   **Analysis**: Custom heuristic detection algorithms
+* **Backend**: Python (Flask)
+* **Frontend**: Angular v20 + TailwindCSS
+* **Analysis Engine**: Predictive AI Models + Custom Heuristic Algorithms
 
 ## Prerequisites
 
-*   **Python**: 3.8+
-*   **Node.js**: 22+ (or 20.19+)
-*   **npm**: 8+
+* **Python**: 3.8+
+* **Node.js**: 22+ (or 20.19+)
+* **npm**: 8+
 
 ## Installation & Usage
 
